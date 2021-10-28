@@ -25,12 +25,19 @@ while keyboard.is_pressed('q') == False:
     r, g, b = white.getpixel((1, 1))
 
     image = cv2.imread('Area.png')
+
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    canned = cv2.Canny(image, 100, 100)
 
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.3, 200, param1=90, param2=100)
-    circles2 = cv2.HoughCircles(canned, cv2.HOUGH_GRADIENT, 1.4, 350, param1=90, param2=98)
+    v = np.median(image)
 
+    upper, im = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    lower = 0.5*upper
+
+    canned = cv2.Canny(im, lower, upper)
+    
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.3, 200, param1=90, param2=60)
+    circles2 = cv2.HoughCircles(canned, cv2.HOUGH_GRADIENT, 1.3, 350, param1=90, param2=60)
+    circles3 = cv2.HoughCircles(canned, cv2.HOUGH_GRADIENT, 1.4, 350, param1=90, param2=60)
 
     if r == 255 and g == 255 and b == 255:
 
@@ -38,43 +45,21 @@ while keyboard.is_pressed('q') == False:
         time.sleep(1)
 
         if circles is not None:
-
             circles = np.round(circles[0, :]).astype("int")
-
             for (x, y, r) in circles:
-                print(x, y, r)
-                click(x + 955, y + 425)
-                break
-
-        elif circles2 is not None:
-
-            circles2 = np.round(circles2[0, :]).astype("int")
-
-            for (x, y, r) in circles2:
-                print(x, y, r)
-                click(x + 955, y + 425)
-                break
+                    print(x, y, r)
+                    click(x + 955, y + 425)
+                    break
 
         time.sleep(1)
 
     else:
 
         if circles is not None:
-
             circles = np.round(circles[0, :]).astype("int")
-
             for (x, y, r) in circles:
-                print(x, y, r)
-                click(x + 955, y + 425)
-                break
-
-        elif circles2 is not None:
-
-            circles2 = np.round(circles2[0, :]).astype("int")
-
-            for (x, y, r) in circles2:
-                print(x, y, r)
-                click(x + 955, y + 425)
-                break
+                    print(x, y, r)
+                    click(x + 955, y + 425)
+                    break
 
         time.sleep(1)
